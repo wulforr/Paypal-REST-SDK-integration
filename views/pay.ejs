@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Payment page</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <form action="/payment" method="POST" id="pay-form">
+        <label for="#amount">Enter Donation Amount:</label>
+        <input type="text" name="amount" id="amount"><br>
+        <label><input type="radio" name="paytype" id="paypal" value="paypal">Paypal</label>
+        <br>
+        <label><input type="radio" name="paytype" id="creditCard" value="creditCard">Credit Card</label><br>
+        <button>Donate</button>
+    </form>
+</body>
+</html>
