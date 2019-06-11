@@ -22,23 +22,16 @@ app.get("/",(req,res) => {
 
 
 app.get("/pay",(req,res)=>{
-    //res.send(util.inspect(req));rs
+
     res.render("pay.ejs");
 })
 
 app.post("/payment",(req,res,next)=>{
-    // req.path = "/" + req.body.paytype + "-pay" ;
-    // req.url = "/" + req.body.paytype + "-pay" ;
-    // next();
-    if(req.body.paytype === "paypal")
-    {
-        res.redirect(307,"/paypal-pay");
-    }
-    else
-    {
-        res.redirect("/credit-pay");
-    }
+
+    let url = "/" + req.body.paytype + "-pay";
+    res.redirect(307,url);
 })
+
 app.post("/paypal-pay",(req,res) => {
     console.log(req.body.amount);
     const create_payment_json = {
@@ -108,79 +101,6 @@ app.post("/paypal-pay",(req,res) => {
                     let email = payment.payer.payer_info.email;
                     
 
-/*
-                    nodemailer.SMTP = {
-                       host: 'mail.yourmail.com',
-                       port: 25,
-                       use_authentication: true,
-                       user: 'wulforr@youdomain.com',
-                       pass: 'wulfor8397'
-                     };
-                  
-                    var message = {   
-                          sender: "sender@domain.com",    
-                          to:'somemail@somedomain.com',   
-                          subject: '',    
-                          html: '<h1>test</h1>',  
-                          attachments: [  
-                          {   
-                              filename: "somepicture.jpg",    
-                              contents: new Buffer(data, 'base64'),   
-                              cid: cid    
-                          }   
-                          ]   
-                      };
-                  
-                  
-                      nodemailer.send_mail(message,   
-                        function(err) {   
-                          if (!err) { 
-                              console.log('Email send ...');
-                          } else console.log(sys.inspect(err));       
-                      });
-
-
-                      async function main(){
-                        // Generate test SMTP service account from ethereal.email
-                        // Only needed if you don't have a real mail account for testing
-                        await nodemailer.createTestAccount((err, account) => {
-                            if (err) {
-                                console.error('Failed to create a testing account. ' + err.message);
-                                return process.exit(1);
-                            }
-                        }
-                        
-                        console.log('Credentials obtained, sending message...');                      
-                        // create reusable transporter object using the default SMTP transport
-                         let transporter = await nodemailer.createTransport({
-                          host: "donation   ",
-                          port: 587,
-                          secure: false, // true for 465, false for other ports
-                          auth: {
-                            user: testAccount.user, // generated ethereal user
-                            pass: testAccount.pass // generated ethereal password
-                          }
-                        });
-                      
-                        // send mail with defined transport object
-                        let info = await transporter.sendMail({
-                          from: '"Fred Foo 👻" <foo@example.com>', // sender address
-                          to: "bar@example.com, baz@example.com", // list of receivers
-                          
-                        });
-                      
-                        console.log("Message sent: %s", info.messageId);
-                        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-                      
-                        // Preview only available when sending through an Ethereal account
-                        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-                        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-                      
-                    })
-                }
-                    main().catch(console.error);
-
-                    */
                     nodemailer.createTestAccount((err, account) => {
                         if (err) {
                             console.error('Failed to create a testing account. ' + err.message);
@@ -216,11 +136,12 @@ app.post("/paypal-pay",(req,res) => {
                             console.log('Message sent: %s', info.messageId);
                             // Preview only available when sending through an Ethereal account
                             console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+                            res.render("success.ejs",{amount: amountPaid, currency: currency, name: name,email: email,previewmaail: nodemailer.getTestMessageUrl(info)});
                         });
                     });
 
 
-                    res.render("success.ejs",{amount: amountPaid, currency: currency, name: name,email: email});
             }
         });
     })
